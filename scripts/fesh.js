@@ -1,13 +1,19 @@
 (function() {
   const createImage = (file) => {
+    const link = document.createElement('a');
     const img = document.createElement('img');
 
+    link.setAttribute('href', file);
+    link.setAttribute('rel', 'noopener noreferrer');
+    link.setAttribute('target', '_blank');
     img.setAttribute('src', file);
 
-    return img;
+    link.appendChild(img);
+
+    return link;
   };
 
-  const getActiveImage = (container) => container.querySelector('img.active');
+  const getActiveImage = (container) => container.querySelector('a.active');
 
   const gallery = (selector, files) => {
     const target = document.querySelector(selector);
@@ -22,6 +28,7 @@
     controlsContainer.classList.add('controls');
 
     firstImage.classList.add('active');
+    imageContainer.classList.add('images');
     imageContainer.appendChild(firstImage);
 
     for (const file of otherFiles) {
@@ -33,7 +40,7 @@
     prevControl.appendChild(document.createTextNode('⬅️'));
     prevControl.addEventListener('click', () => {
       const currentActive = getActiveImage(target);
-      const nextActive = imageContainer.firstChild === currentActive ? imageContainer.lastChild : currentActive.prevSibling;
+      const nextActive = imageContainer.firstChild === currentActive ? imageContainer.lastChild : currentActive.previousSibling;
 
       currentActive.classList.remove('active');
       nextActive.classList.add('active');

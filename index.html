@@ -39,14 +39,20 @@
         white-space: nowrap;
       }
 
-      .fesh-gallery img {
+      .fesh-gallery .images {
+        display: flex;
+        justify-content: center;
+      }
+      .fesh-gallery a {
         display: none;
-        margin: 0 auto;
+        text-decoration: none;
+      }
+      .fesh-gallery a img {
         max-height: 450px;
         max-width: 100%;
         height: 100%;
       }
-      .fesh-gallery img.active {
+      .fesh-gallery a.active {
         display: block;
       }
 
