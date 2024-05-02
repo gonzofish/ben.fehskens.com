@@ -50,22 +50,21 @@
         display: block;
       }
 
-      .fesh-gallery button.control {
+      .fesh-gallery .controls {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .fesh-gallery .controls button {
         background-color: transparent;
         border: 0;
-        font-size: 5em;
+        font-size: 3em;
         padding: 0;
-        position: absolute;
-        top: calc(50% - 1em);
-        visibility: hidden;
       }
-      .fesh-gallery:hover button.control {
-        visibility: visible;
-      }
-      .fesh-gallery button.control.prev {
+      .fesh-gallery .controls button.prev {
         left: 0;
       }
-      .fesh-gallery button.control.next {
+      .fesh-gallery .controls button.next {
         right: 0;
       }
     </style>
