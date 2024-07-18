@@ -87,6 +87,12 @@
       </article>
 
       <article>
+        <h2>Ben's Singing Monsters</h2>
+
+        <div id="bsm"></div>
+      </article>
+
+      <article>
         <h2>Diary of a Ben Fehskens</h2>
 
         <div id="dbf-comic"></div>
@@ -104,6 +110,7 @@
     <script src="scripts/fesh.js"></script>
     <script>
       fesh.gallery('#dbf-comic', ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09'].map((num) => `./images/DBF/DBF_${num}.jpg`));
+      fesh.gallery('#bsm', ['epic_bangloop', 'bangloop', 'rare_yoreek', 'supa_epic_pumml', 'bolb'].map((name) => `./images/BSM/${name}.jpg`));
     </script>
   </body>
 </html>
