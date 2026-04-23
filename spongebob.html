@@ -100,6 +100,106 @@
         opacity: 0.7;
       }
 
+      /* Secret Formula */
+      #ingredients-list {
+        padding-left: 1.4em;
+        margin-bottom: 1.2em;
+        line-height: 2;
+      }
+
+      .ingredient {
+        font-size: 1em;
+        transition: color 0.4s;
+      }
+
+      .ingredient.locked {
+        color: transparent;
+        background: #b0b0b0;
+        border-radius: 3px;
+        user-select: none;
+        display: inline-block;
+      }
+
+      .ingredient.revealed {
+        color: #023e8a;
+        font-weight: bold;
+        animation: pop-in 0.35s ease;
+      }
+
+      @keyframes pop-in {
+        0%   { transform: scale(0.7); opacity: 0; }
+        70%  { transform: scale(1.08); }
+        100% { transform: scale(1); opacity: 1; }
+      }
+
+      #trivia-progress {
+        font-size: 0.85em;
+        color: #888;
+        margin-bottom: 0.4em;
+      }
+
+      #trivia-question {
+        font-weight: bold;
+        color: #023e8a;
+        margin-bottom: 0.6em;
+      }
+
+      #trivia-choices {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+        margin-bottom: 0.6em;
+      }
+
+      .trivia-choice {
+        padding: 0.45em 0.9em;
+        background: #fff;
+        border: 2px solid #00b4d8;
+        border-radius: 20px;
+        font-size: 0.95em;
+        color: #023e8a;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+      }
+
+      .trivia-choice:hover {
+        background: #e0f7fa;
+      }
+
+      .trivia-choice.correct {
+        background: #c8f7c5;
+        border-color: #2ecc71;
+        color: #1a6b38;
+      }
+
+      .trivia-choice.wrong {
+        background: #fde8e8;
+        border-color: #e74c3c;
+        color: #922b21;
+        animation: shake 0.35s ease;
+      }
+
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%       { transform: translateX(-6px); }
+        60%       { transform: translateX(6px); }
+      }
+
+      #trivia-feedback {
+        font-size: 0.9em;
+        min-height: 1.4em;
+        color: #555;
+        font-style: italic;
+      }
+
+      #trivia-complete {
+        margin-top: 0.8em;
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #023e8a;
+        text-align: center;
+      }
+
       /* Modal */
       .meme-modal-backdrop {
         display: none;
@@ -351,6 +451,24 @@
         </ol>
       </article>
 
+      <article id="secret-ingredients-section">
+        <h2>The Secret Formula</h2>
+        <p>The Krabby Patty secret formula has never been revealed — until now. Answer SpongeBob trivia to unlock each ingredient.</p>
+
+        <ol id="ingredients-list"></ol>
+
+        <div id="trivia-area">
+          <div id="trivia-progress"></div>
+          <p id="trivia-question"></p>
+          <div id="trivia-choices"></div>
+          <p id="trivia-feedback" aria-live="polite"></p>
+        </div>
+
+        <div id="trivia-complete" hidden>
+          <p>You did it! The secret formula is yours. 🍔</p>
+        </div>
+      </article>
+
       <article>
         <h2>Memes &amp; Reactions</h2>
         <div class="memes">
@@ -403,6 +521,153 @@
         './images/SB/parade.jpg',
         './images/SB/krakow.jpg',
       ]);
+
+      (function () {
+        const trivia = [
+          {
+            question: 'What is the name of SpongeBob\'s pet snail?',
+            choices: ['Larry', 'Gary', 'Barry', 'Harold'],
+            answer: 'Gary',
+            ingredient: 'Sesame seed buns',
+          },
+          {
+            question: 'What instrument does Squidward play?',
+            choices: ['Trumpet', 'Flute', 'Clarinet', 'Trombone'],
+            answer: 'Clarinet',
+            ingredient: 'Patty (no real meat)',
+          },
+          {
+            question: 'What U.S. state is Sandy Cheeks from?',
+            choices: ['Florida', 'California', 'Texas', 'Oklahoma'],
+            answer: 'Texas',
+            ingredient: 'Tomato',
+          },
+          {
+            question: 'What is the name of Plankton\'s restaurant?',
+            choices: ['The Krusty Bucket', 'The Chum Bucket', 'The Slop Shop', 'Plankton\'s Palace'],
+            answer: 'The Chum Bucket',
+            ingredient: 'Lettuce',
+          },
+          {
+            question: 'What does Patrick Star live under?',
+            choices: ['A shell', 'A rock', 'A log', 'The sea floor'],
+            answer: 'A rock',
+            ingredient: 'Red onion (not cut)',
+          },
+          {
+            question: 'What is the name of SpongeBob\'s boating school teacher?',
+            choices: ['Mrs. Puff', 'Mrs. Fluff', 'Ms. Bluff', 'Mrs. Gruff'],
+            answer: 'Mrs. Puff',
+            ingredient: 'Pickles',
+          },
+          {
+            question: 'What is SpongeBob\'s full name?',
+            choices: ['SpongeBob SquarePants', 'SpongeBob RoundPants', 'SpongeBob SquareShorts', 'SpongeBob WetPants'],
+            answer: 'SpongeBob SquarePants',
+            ingredient: 'Cheese',
+          },
+          {
+            question: 'What is Mr. Krabs\' first name?',
+            choices: ['Ernest', 'Eugene', 'Edgar', 'Edmund'],
+            answer: 'Eugene',
+            ingredient: 'Ketchup',
+          },
+          {
+            question: 'In what ocean is Bikini Bottom located?',
+            choices: ['Atlantic', 'Indian', 'Arctic', 'Pacific'],
+            answer: 'Pacific',
+            ingredient: 'Mustard',
+          },
+          {
+            question: 'What is the name of the show SpongeBob and Patrick watch on TV?',
+            choices: ['Barnacle Boy & Mermaid Man', 'The Adventures of Mermaid Man and Barnacle Boy', 'Super Sea Heroes', 'Aqua Force'],
+            answer: 'The Adventures of Mermaid Man and Barnacle Boy',
+            ingredient: 'Mayo',
+          },
+          {
+            question: 'According to SpongeBob, what is the most important ingredient in any recipe?',
+            choices: ['Salt', 'Butter', 'Love', 'Kelp'],
+            answer: 'Love',
+            ingredient: 'Love',
+          },
+        ];
+
+        let current = 0;
+        let locked = true;
+
+        const list = document.getElementById('ingredients-list');
+        const questionEl = document.getElementById('trivia-question');
+        const choicesEl = document.getElementById('trivia-choices');
+        const feedbackEl = document.getElementById('trivia-feedback');
+        const progressEl = document.getElementById('trivia-progress');
+        const triviaArea = document.getElementById('trivia-area');
+        const completeEl = document.getElementById('trivia-complete');
+
+        const REDACTED = '\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588';
+
+        trivia.forEach((item, i) => {
+          const li = document.createElement('li');
+          const span = document.createElement('span');
+          span.className = 'ingredient locked';
+          span.textContent = REDACTED;
+          span.id = 'ingredient-' + i;
+          li.appendChild(span);
+          list.appendChild(li);
+        });
+
+        const showQuestion = () => {
+          const q = trivia[current];
+          progressEl.textContent = `Question ${current + 1} of ${trivia.length}`;
+          questionEl.textContent = q.question;
+          feedbackEl.textContent = '';
+          choicesEl.innerHTML = '';
+
+          const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+          shuffled.forEach((choice) => {
+            const btn = document.createElement('button');
+            btn.className = 'trivia-choice';
+            btn.textContent = choice;
+            btn.addEventListener('click', () => handleAnswer(choice, btn));
+            choicesEl.appendChild(btn);
+          });
+        };
+
+        const handleAnswer = (choice, btn) => {
+          const q = trivia[current];
+          const allBtns = choicesEl.querySelectorAll('.trivia-choice');
+
+          allBtns.forEach((b) => b.disabled = true);
+
+          if (choice === q.answer) {
+            btn.classList.add('correct');
+            feedbackEl.textContent = 'Correct! 🎉';
+
+            const span = document.getElementById('ingredient-' + current);
+            setTimeout(() => {
+              span.textContent = q.ingredient;
+              span.className = 'ingredient revealed';
+              current++;
+              if (current < trivia.length) {
+                setTimeout(showQuestion, 800);
+              } else {
+                triviaArea.hidden = true;
+                completeEl.hidden = false;
+              }
+            }, 600);
+          } else {
+            btn.classList.add('wrong');
+            feedbackEl.textContent = 'Not quite — try again!';
+            setTimeout(() => {
+              btn.classList.remove('wrong');
+              btn.disabled = false;
+              allBtns.forEach((b) => b.disabled = false);
+              feedbackEl.textContent = '';
+            }, 700);
+          }
+        };
+
+        showQuestion();
+      })();
 
       (function () {
         const backdrop = document.getElementById('meme-backdrop');
