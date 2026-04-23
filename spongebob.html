@@ -100,6 +100,36 @@
         opacity: 0.7;
       }
 
+      /* Section nav */
+      #section-nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: #023e8a;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25em;
+        padding: 0.5em 0.75em;
+        margin-bottom: 1em;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      }
+
+      #section-nav a {
+        font-family: 'Fredoka One', cursive;
+        font-size: 0.95em;
+        color: #ffd60a;
+        text-decoration: none;
+        padding: 0.25em 0.65em;
+        border-radius: 20px;
+        transition: background 0.15s, color 0.15s;
+        white-space: nowrap;
+      }
+
+      #section-nav a:hover {
+        background: #ffd60a;
+        color: #023e8a;
+      }
+
       /* Secret Formula */
       #ingredients-list {
         padding-left: 1.4em;
@@ -356,7 +386,15 @@
         <a class="back-link" href="./">← Back to Webpage of Ben</a>
       </article>
 
-      <article>
+      <nav id="section-nav">
+        <a href="#section-gallery">Gallery</a>
+        <a href="#section-facts">Fun Facts</a>
+        <a href="#section-episodes">Episodes</a>
+        <a href="#section-formula">Secret Formula</a>
+        <a href="#section-memes">Memes</a>
+      </nav>
+
+      <article id="section-gallery">
         <h2>Gallery</h2>
         <div id="sb-gallery"></div>
         <p class="attribution">
@@ -366,7 +404,7 @@
         </p>
       </article>
 
-      <article>
+      <article id="section-facts">
         <h2>Fun Facts</h2>
         <ul class="facts-list">
           <li>SpongeBob was almost named <strong>SpongeBoy</strong> — the name was trademarked by a mop company.</li>
@@ -380,7 +418,7 @@
         </ul>
       </article>
 
-      <article>
+      <article id="section-episodes">
         <h2>Favorite Episodes</h2>
         <ol class="episodes-list">
           <li>
@@ -451,7 +489,7 @@
         </ol>
       </article>
 
-      <article id="secret-ingredients-section">
+      <article id="section-formula">
         <h2>The Secret Formula</h2>
         <p>The Krabby Patty secret formula has never been revealed — until now. Answer SpongeBob trivia to unlock each ingredient.</p>
 
@@ -469,7 +507,7 @@
         </div>
       </article>
 
-      <article>
+      <article id="section-memes">
         <h2>Memes &amp; Reactions</h2>
         <div class="memes">
           <div class="meme-card" data-img="./images/SB/mocking_spongebob.jpg" data-label="mOcKiNg SpOnGeBoB" data-transform="mocking">
