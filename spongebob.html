@@ -71,6 +71,13 @@
         max-width: 340px;
         flex: 1 1 260px;
         box-shadow: 1px 2px 6px rgba(0,0,0,0.15);
+        cursor: pointer;
+        transition: transform 0.1s, box-shadow 0.1s;
+      }
+
+      .meme-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 2px 6px 12px rgba(0,0,0,0.2);
       }
 
       .meme-card .meme-text {
@@ -84,6 +91,119 @@
         font-size: 0.85em;
         color: #444;
         font-style: italic;
+      }
+
+      .meme-card .meme-hint {
+        font-size: 0.75em;
+        color: #023e8a;
+        margin-top: 0.6em;
+        opacity: 0.7;
+      }
+
+      /* Modal */
+      .meme-modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.7);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        padding: 1em;
+      }
+
+      .meme-modal-backdrop.open {
+        display: flex;
+      }
+
+      .meme-modal {
+        background: #fffde7;
+        border-radius: 10px;
+        padding: 1.2em;
+        max-width: 560px;
+        width: 100%;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        position: relative;
+      }
+
+      .meme-modal-close {
+        position: absolute;
+        top: 0.6em;
+        right: 0.8em;
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        cursor: pointer;
+        color: #023e8a;
+        line-height: 1;
+      }
+
+      .meme-modal h3 {
+        font-family: 'Fredoka One', cursive;
+        color: #023e8a;
+        margin: 0 0 0.8em;
+      }
+
+      .meme-preview {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        line-height: 0;
+      }
+
+      .meme-preview img {
+        width: 100%;
+        max-height: 380px;
+        object-fit: contain;
+        border-radius: 4px;
+        display: block;
+      }
+
+      .meme-overlay {
+        position: absolute;
+        left: 0;
+        right: 0;
+        padding: 0.3em 0.5em;
+        font-family: Impact, 'Arial Narrow', sans-serif;
+        font-size: clamp(1.2em, 5vw, 2em);
+        font-weight: 900;
+        text-transform: uppercase;
+        color: #fff;
+        text-shadow:
+          -2px -2px 0 #000,
+           2px -2px 0 #000,
+          -2px  2px 0 #000,
+           2px  2px 0 #000;
+        text-align: center;
+        word-break: break-word;
+        line-height: 1.15;
+        pointer-events: none;
+      }
+
+      .meme-overlay.top { top: 0; }
+      .meme-overlay.bottom { bottom: 0; }
+
+      .meme-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6em;
+        margin-top: 0.9em;
+      }
+
+      .meme-inputs input {
+        padding: 0.5em 0.7em;
+        border: 2px solid #00b4d8;
+        border-radius: 6px;
+        font-size: 1em;
+        background: #fff;
+        color: #023e8a;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .meme-inputs input:focus {
+        outline: none;
+        border-color: #023e8a;
       }
 
       .episode-embed {
@@ -218,25 +338,45 @@
       <article>
         <h2>Memes &amp; Reactions</h2>
         <div class="memes">
-          <div class="meme-card">
+          <div class="meme-card" data-img="./images/SB/spongebob_character.svg" data-label="mOcKiNg SpOnGeBoB">
             <div class="meme-text">mOcKiNg SpOnGeBoB</div>
             <div class="meme-caption">When someone says something dumb and you repeat it back at them — alternating caps included.</div>
+            <div class="meme-hint">Click to make a meme</div>
           </div>
-          <div class="meme-card">
+          <div class="meme-card" data-img="./images/SB/character_montage.png" data-label="✨ Imagination ✨">
             <div class="meme-text">✨ Imagination ✨</div>
             <div class="meme-caption">SpongeBob stretches a rainbow between his hands. Use whenever something is very far-fetched.</div>
+            <div class="meme-hint">Click to make a meme</div>
           </div>
-          <div class="meme-card">
+          <div class="meme-card" data-img="./images/SB/krakow.jpg" data-label="Tired SpongeBob">
             <div class="meme-text">Tired SpongeBob</div>
             <div class="meme-caption">SpongeBob waiting at the bus stop, dead-eyed, doing his best. Relatable every Monday.</div>
+            <div class="meme-hint">Click to make a meme</div>
           </div>
-          <div class="meme-card">
+          <div class="meme-card" data-img="./images/SB/parade.jpg" data-label="Savage Patrick">
             <div class="meme-text">Savage Patrick</div>
             <div class="meme-caption">Patrick with an unsettling grin. Reserved for when you are about to make a terrible decision and you know it.</div>
+            <div class="meme-hint">Click to make a meme</div>
           </div>
         </div>
       </article>
     </main>
+
+    <div class="meme-modal-backdrop" id="meme-backdrop">
+      <div class="meme-modal">
+        <button class="meme-modal-close" id="meme-close" aria-label="Close">✕</button>
+        <h3 id="meme-modal-title"></h3>
+        <div class="meme-preview">
+          <img id="meme-img" src="" alt="Meme template">
+          <div class="meme-overlay top" id="meme-top-overlay"></div>
+          <div class="meme-overlay bottom" id="meme-bottom-overlay"></div>
+        </div>
+        <div class="meme-inputs">
+          <input type="text" id="meme-top-input" placeholder="Top text">
+          <input type="text" id="meme-bottom-input" placeholder="Bottom text">
+        </div>
+      </div>
+    </div>
 
     <script src="scripts/fesh.js"></script>
     <script>
@@ -246,6 +386,51 @@
         './images/SB/parade.jpg',
         './images/SB/krakow.jpg',
       ]);
+
+      (function () {
+        const backdrop = document.getElementById('meme-backdrop');
+        const modalTitle = document.getElementById('meme-modal-title');
+        const memeImg = document.getElementById('meme-img');
+        const topOverlay = document.getElementById('meme-top-overlay');
+        const bottomOverlay = document.getElementById('meme-bottom-overlay');
+        const topInput = document.getElementById('meme-top-input');
+        const bottomInput = document.getElementById('meme-bottom-input');
+
+        const openModal = (img, label) => {
+          memeImg.src = img;
+          modalTitle.textContent = label;
+          topInput.value = '';
+          bottomInput.value = '';
+          topOverlay.textContent = '';
+          bottomOverlay.textContent = '';
+          backdrop.classList.add('open');
+          topInput.focus();
+        };
+
+        const closeModal = () => backdrop.classList.remove('open');
+
+        document.querySelectorAll('.meme-card').forEach((card) => {
+          card.addEventListener('click', () => openModal(card.dataset.img, card.dataset.label));
+        });
+
+        document.getElementById('meme-close').addEventListener('click', closeModal);
+
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeModal();
+        });
+
+        topInput.addEventListener('input', () => {
+          topOverlay.textContent = topInput.value;
+        });
+
+        bottomInput.addEventListener('input', () => {
+          bottomOverlay.textContent = bottomInput.value;
+        });
+      })();
     </script>
   </body>
 </html>
