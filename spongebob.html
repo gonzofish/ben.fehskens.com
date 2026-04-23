@@ -1,0 +1,836 @@
+<html>
+  <head>
+    <title>SpongeBob - Webpage of Ben</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+
+    <style>
+      body {
+        background: linear-gradient(160deg, #0096c7, #ffd60a);
+      }
+
+      article {
+        background-color: #fffde7;
+      }
+
+      h1, h2 {
+        font-family: 'Fredoka One', cursive;
+        color: #023e8a;
+      }
+
+      a {
+        color: #e76f51;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-top: 0.5em;
+        font-size: 0.95em;
+      }
+
+      .facts-list {
+        line-height: 1.8;
+        padding-left: 1.4em;
+      }
+
+      .episodes-list {
+        padding-left: 1.4em;
+        line-height: 1.6;
+      }
+
+      .episodes-list li {
+        margin-bottom: 0.6em;
+      }
+
+      .episode-title {
+        font-weight: bold;
+        color: #023e8a;
+      }
+
+      .episode-meta {
+        color: #888;
+        font-size: 0.9em;
+      }
+
+      .memes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1em;
+        justify-content: center;
+      }
+
+      .meme-card {
+        background: linear-gradient(135deg, #00b4d8, #90e0ef);
+        border-radius: 8px;
+        padding: 1em 1.2em;
+        max-width: 340px;
+        flex: 1 1 260px;
+        box-shadow: 1px 2px 6px rgba(0,0,0,0.15);
+        cursor: pointer;
+        transition: transform 0.1s, box-shadow 0.1s;
+      }
+
+      .meme-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 2px 6px 12px rgba(0,0,0,0.2);
+      }
+
+      .meme-card .meme-text {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #023e8a;
+        margin-bottom: 0.4em;
+      }
+
+      .meme-card .meme-caption {
+        font-size: 0.85em;
+        color: #444;
+        font-style: italic;
+      }
+
+      .meme-card .meme-hint {
+        font-size: 0.75em;
+        color: #023e8a;
+        margin-top: 0.6em;
+        opacity: 0.7;
+      }
+
+      /* Section nav */
+      #section-nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: #023e8a;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25em;
+        padding: 0.5em 0.75em;
+        margin-bottom: 1em;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      }
+
+      #section-nav a {
+        font-family: 'Fredoka One', cursive;
+        font-size: 0.95em;
+        color: #ffd60a;
+        text-decoration: none;
+        padding: 0.25em 0.65em;
+        border-radius: 20px;
+        transition: background 0.15s, color 0.15s;
+        white-space: nowrap;
+      }
+
+      #section-nav a:hover {
+        background: #ffd60a;
+        color: #023e8a;
+      }
+
+      /* Secret Formula */
+      #ingredients-list {
+        padding-left: 1.4em;
+        margin-bottom: 1.2em;
+        line-height: 2;
+      }
+
+      .ingredient {
+        font-size: 1em;
+        transition: color 0.4s;
+      }
+
+      .ingredient.locked {
+        color: transparent;
+        background: #b0b0b0;
+        border-radius: 3px;
+        user-select: none;
+        display: inline-block;
+      }
+
+      .ingredient.revealed {
+        color: #023e8a;
+        font-weight: bold;
+        animation: pop-in 0.35s ease;
+      }
+
+      @keyframes pop-in {
+        0%   { transform: scale(0.7); opacity: 0; }
+        70%  { transform: scale(1.08); }
+        100% { transform: scale(1); opacity: 1; }
+      }
+
+      #trivia-progress {
+        font-size: 0.85em;
+        color: #888;
+        margin-bottom: 0.4em;
+      }
+
+      #trivia-question {
+        font-weight: bold;
+        color: #023e8a;
+        margin-bottom: 0.6em;
+      }
+
+      #trivia-choices {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+        margin-bottom: 0.6em;
+      }
+
+      .trivia-choice {
+        padding: 0.45em 0.9em;
+        background: #fff;
+        border: 2px solid #00b4d8;
+        border-radius: 20px;
+        font-size: 0.95em;
+        color: #023e8a;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+      }
+
+      .trivia-choice:hover {
+        background: #e0f7fa;
+      }
+
+      .trivia-choice.correct {
+        background: #c8f7c5;
+        border-color: #2ecc71;
+        color: #1a6b38;
+      }
+
+      .trivia-choice.wrong {
+        background: #fde8e8;
+        border-color: #e74c3c;
+        color: #922b21;
+        animation: shake 0.35s ease;
+      }
+
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%       { transform: translateX(-6px); }
+        60%       { transform: translateX(6px); }
+      }
+
+      #trivia-feedback {
+        font-size: 0.9em;
+        min-height: 1.4em;
+        color: #555;
+        font-style: italic;
+      }
+
+      #trivia-complete {
+        margin-top: 0.8em;
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #023e8a;
+        text-align: center;
+      }
+
+      /* Modal */
+      .meme-modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.7);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        padding: 1em;
+      }
+
+      .meme-modal-backdrop.open {
+        display: flex;
+      }
+
+      .meme-modal {
+        background: #fffde7;
+        border-radius: 10px;
+        padding: 1.2em;
+        max-width: 560px;
+        width: 100%;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        position: relative;
+      }
+
+      .meme-modal-close {
+        position: absolute;
+        top: 0.6em;
+        right: 0.8em;
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        cursor: pointer;
+        color: #023e8a;
+        line-height: 1;
+      }
+
+      .meme-modal h3 {
+        font-family: 'Fredoka One', cursive;
+        color: #023e8a;
+        margin: 0 0 0.8em;
+      }
+
+      .meme-preview {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        line-height: 0;
+      }
+
+      .meme-preview img {
+        width: 100%;
+        max-height: 380px;
+        object-fit: contain;
+        border-radius: 4px;
+        display: block;
+      }
+
+      .meme-overlay {
+        position: absolute;
+        left: 0;
+        right: 0;
+        padding: 0.3em 0.5em;
+        font-family: Impact, 'Arial Narrow', sans-serif;
+        font-size: clamp(1.2em, 5vw, 2em);
+        font-weight: 900;
+        text-transform: uppercase;
+        color: #fff;
+        text-shadow:
+          -2px -2px 0 #000,
+           2px -2px 0 #000,
+          -2px  2px 0 #000,
+           2px  2px 0 #000;
+        text-align: center;
+        word-break: break-word;
+        line-height: 1.15;
+        pointer-events: none;
+      }
+
+      .meme-overlay.top { top: 0; }
+      .meme-overlay.bottom { bottom: 0; }
+
+      .meme-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6em;
+        margin-top: 0.9em;
+      }
+
+      .meme-inputs input {
+        padding: 0.5em 0.7em;
+        border: 2px solid #00b4d8;
+        border-radius: 6px;
+        font-size: 1em;
+        background: #fff;
+        color: #023e8a;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .meme-inputs input:focus {
+        outline: none;
+        border-color: #023e8a;
+      }
+
+      #meme-download {
+        padding: 0.55em 1em;
+        background: #023e8a;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 1em;
+        font-family: 'Fredoka One', cursive;
+        letter-spacing: 0.03em;
+        width: 100%;
+      }
+
+      #meme-download:hover {
+        background: #0353a4;
+      }
+
+      .episode-embed {
+        margin-top: 0.6em;
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 */
+      }
+
+      .episode-embed iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        border-radius: 4px;
+      }
+
+      .attribution {
+        font-size: 0.7em;
+        color: #888;
+        margin-top: 1em;
+        font-style: italic;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <article>
+        <h1>SpongeBob SquarePants</h1>
+        <p>Are you ready, kids?</p>
+        <a class="back-link" href="./">← Back to Webpage of Ben</a>
+      </article>
+
+      <nav id="section-nav">
+        <a href="#section-gallery">Gallery</a>
+        <a href="#section-facts">Fun Facts</a>
+        <a href="#section-episodes">Episodes</a>
+        <a href="#section-formula">Secret Formula</a>
+        <a href="#section-memes">Memes</a>
+      </nav>
+
+      <article id="section-gallery">
+        <h2>Gallery</h2>
+        <div id="sb-gallery"></div>
+        <p class="attribution">
+          Images: SpongeBob character &amp; montage © NickRewind (CC BY 3.0) &middot;
+          Kraków photo © Batusaurus (CC BY-SA 4.0) &middot;
+          Parade photo © Lee Hoffman (CC BY 2.0)
+        </p>
+      </article>
+
+      <article id="section-facts">
+        <h2>Fun Facts</h2>
+        <ul class="facts-list">
+          <li>SpongeBob was almost named <strong>SpongeBoy</strong> — the name was trademarked by a mop company.</li>
+          <li>Creator <strong>Stephen Hillenburg</strong> had a marine biology degree and taught ocean science before making the show.</li>
+          <li>The show premiered on <strong>May 1, 1999</strong> — over 25 years ago!</li>
+          <li>Bikini Bottom is loosely based on <strong>Bikini Atoll</strong>, a real island in the Pacific Ocean.</li>
+          <li>SpongeBob's pet snail <strong>Gary</strong> meows like a cat.</li>
+          <li><strong>Sandy Cheeks</strong> is from Texas and holds multiple in-universe patents.</li>
+          <li><strong>Tom Kenny</strong> has voiced SpongeBob for the entire run of the show.</li>
+          <li>Hillenburg originally wanted the show to end after the first movie in 2004 — Nickelodeon had other plans.</li>
+        </ul>
+      </article>
+
+      <article id="section-episodes">
+        <h2>Favorite Episodes</h2>
+        <ol class="episodes-list">
+          <li>
+            <span class="episode-title">Band Geeks</span>
+            <span class="episode-meta">(S2E15)</span>
+            <br>Squidward's band finally gets their moment. Widely considered the greatest episode ever made.
+            <div class="episode-embed">
+              <iframe
+                src="https://www.youtube.com/embed/k9iYm9PEAHg"
+                title="Sweet Victory – Band Geeks finale"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </li>
+          <li>
+            <span class="episode-title">Chocolate with Nuts</span>
+            <span class="episode-meta">(S3E11)</span>
+            <br>SpongeBob and Patrick try to sell chocolate bars door-to-door. "CHOCOLATE!!!!"
+            <div class="episode-embed">
+              <iframe
+                src="https://www.youtube.com/embed/2dKfROjBZnE"
+                title="CHOCOLATE!! scene – Chocolate with Nuts"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </li>
+          <li>
+            <span class="episode-title">The Camping Episode</span>
+            <span class="episode-meta">(S3E17)</span>
+            <br>SpongeBob and Patrick set up camp three feet from the house. Features the legendary Sea Bear song.
+            <div class="episode-embed">
+              <iframe
+                src="https://www.youtube.com/embed/68h8-ESTY6o"
+                title="Sea Bear attack – The Camping Episode"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </li>
+          <li>
+            <span class="episode-title">Graveyard Shift</span>
+            <span class="episode-meta">(S2E16)</span>
+            <br>SpongeBob and Squidward work the night shift alone. Nosferatu.
+            <div class="episode-embed">
+              <iframe
+                src="https://www.youtube.com/embed/Q2sPLNtpne4"
+                title="Hash-Slinging Slasher full scene – Graveyard Shift"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </li>
+          <li>
+            <span class="episode-title">Krusty Krab Training Video</span>
+            <span class="episode-meta">(S2E12)</span>
+            <br>A mock corporate training video for new Krabby Patty employees. Peak fourth-wall energy.
+            <div class="episode-embed">
+              <iframe
+                src="https://www.youtube.com/embed/Pblb2_mTfvI"
+                title="Krusty Krab Training Video in 5 minutes"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </li>
+        </ol>
+      </article>
+
+      <article id="section-formula">
+        <h2>The Secret Formula</h2>
+        <p>The Krabby Patty secret formula has never been revealed — until now. Answer SpongeBob trivia to unlock each ingredient.</p>
+
+        <ol id="ingredients-list"></ol>
+
+        <div id="trivia-area">
+          <div id="trivia-progress"></div>
+          <p id="trivia-question"></p>
+          <div id="trivia-choices"></div>
+          <p id="trivia-feedback" aria-live="polite"></p>
+        </div>
+
+        <div id="trivia-complete" hidden>
+          <p>You did it! The secret formula is yours. 🍔</p>
+        </div>
+      </article>
+
+      <article id="section-memes">
+        <h2>Memes &amp; Reactions</h2>
+        <div class="memes">
+          <div class="meme-card" data-img="./images/SB/mocking_spongebob.jpg" data-label="mOcKiNg SpOnGeBoB" data-transform="mocking">
+            <div class="meme-text">mOcKiNg SpOnGeBoB</div>
+            <div class="meme-caption">When someone says something dumb and you repeat it back at them — alternating caps included.</div>
+            <div class="meme-hint">Click to make a meme</div>
+          </div>
+          <div class="meme-card" data-img="./images/SB/imagination.jpg" data-label="✨ Imagination ✨">
+            <div class="meme-text">✨ Imagination ✨</div>
+            <div class="meme-caption">SpongeBob stretches a rainbow between his hands. Use whenever something is very far-fetched.</div>
+            <div class="meme-hint">Click to make a meme</div>
+          </div>
+          <div class="meme-card" data-img="./images/SB/tired_spongebob.jpg" data-label="Tired SpongeBob">
+            <div class="meme-text">Tired SpongeBob</div>
+            <div class="meme-caption">SpongeBob waiting at the bus stop, dead-eyed, doing his best. Relatable every Monday.</div>
+            <div class="meme-hint">Click to make a meme</div>
+          </div>
+          <div class="meme-card" data-img="./images/SB/savage_patrick.jpg" data-label="Savage Patrick">
+            <div class="meme-text">Savage Patrick</div>
+            <div class="meme-caption">Patrick with an unsettling grin. Reserved for when you are about to make a terrible decision and you know it.</div>
+            <div class="meme-hint">Click to make a meme</div>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <div class="meme-modal-backdrop" id="meme-backdrop">
+      <div class="meme-modal">
+        <button class="meme-modal-close" id="meme-close" aria-label="Close">✕</button>
+        <h3 id="meme-modal-title"></h3>
+        <div class="meme-preview">
+          <img id="meme-img" src="" alt="Meme template">
+          <div class="meme-overlay top" id="meme-top-overlay"></div>
+          <div class="meme-overlay bottom" id="meme-bottom-overlay"></div>
+        </div>
+        <div class="meme-inputs">
+          <input type="text" id="meme-top-input" placeholder="Top text">
+          <input type="text" id="meme-bottom-input" placeholder="Bottom text">
+          <button id="meme-download">Download meme</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="scripts/fesh.js"></script>
+    <script>
+      fesh.gallery('#sb-gallery', [
+        './images/SB/spongebob_character.svg',
+        './images/SB/character_montage.png',
+        './images/SB/parade.jpg',
+        './images/SB/krakow.jpg',
+      ]);
+
+      (function () {
+        const trivia = [
+          {
+            question: 'What is the name of SpongeBob\'s pet snail?',
+            choices: ['Larry', 'Gary', 'Barry', 'Harold'],
+            answer: 'Gary',
+            ingredient: 'Sesame seed buns',
+          },
+          {
+            question: 'What instrument does Squidward play?',
+            choices: ['Trumpet', 'Flute', 'Clarinet', 'Trombone'],
+            answer: 'Clarinet',
+            ingredient: 'Patty (no real meat)',
+          },
+          {
+            question: 'What U.S. state is Sandy Cheeks from?',
+            choices: ['Florida', 'California', 'Texas', 'Oklahoma'],
+            answer: 'Texas',
+            ingredient: 'Tomato',
+          },
+          {
+            question: 'What is the name of Plankton\'s restaurant?',
+            choices: ['The Krusty Bucket', 'The Chum Bucket', 'The Slop Shop', 'Plankton\'s Palace'],
+            answer: 'The Chum Bucket',
+            ingredient: 'Lettuce',
+          },
+          {
+            question: 'What does Patrick Star live under?',
+            choices: ['A shell', 'A rock', 'A log', 'The sea floor'],
+            answer: 'A rock',
+            ingredient: 'Red onion (not cut)',
+          },
+          {
+            question: 'What is the name of SpongeBob\'s boating school teacher?',
+            choices: ['Mrs. Puff', 'Mrs. Fluff', 'Ms. Bluff', 'Mrs. Gruff'],
+            answer: 'Mrs. Puff',
+            ingredient: 'Pickles',
+          },
+          {
+            question: 'What is SpongeBob\'s full name?',
+            choices: ['SpongeBob SquarePants', 'SpongeBob RoundPants', 'SpongeBob SquareShorts', 'SpongeBob WetPants'],
+            answer: 'SpongeBob SquarePants',
+            ingredient: 'Cheese',
+          },
+          {
+            question: 'What is Mr. Krabs\' first name?',
+            choices: ['Ernest', 'Eugene', 'Edgar', 'Edmund'],
+            answer: 'Eugene',
+            ingredient: 'Ketchup',
+          },
+          {
+            question: 'In what ocean is Bikini Bottom located?',
+            choices: ['Atlantic', 'Indian', 'Arctic', 'Pacific'],
+            answer: 'Pacific',
+            ingredient: 'Mustard',
+          },
+          {
+            question: 'What is the name of the show SpongeBob and Patrick watch on TV?',
+            choices: ['Barnacle Boy & Mermaid Man', 'The Adventures of Mermaid Man and Barnacle Boy', 'Super Sea Heroes', 'Aqua Force'],
+            answer: 'The Adventures of Mermaid Man and Barnacle Boy',
+            ingredient: 'Mayo',
+          },
+          {
+            question: 'According to SpongeBob, what is the most important ingredient in any recipe?',
+            choices: ['Salt', 'Butter', 'Love', 'Kelp'],
+            answer: 'Love',
+            ingredient: 'Love',
+          },
+        ];
+
+        let current = 0;
+        let locked = true;
+
+        const list = document.getElementById('ingredients-list');
+        const questionEl = document.getElementById('trivia-question');
+        const choicesEl = document.getElementById('trivia-choices');
+        const feedbackEl = document.getElementById('trivia-feedback');
+        const progressEl = document.getElementById('trivia-progress');
+        const triviaArea = document.getElementById('trivia-area');
+        const completeEl = document.getElementById('trivia-complete');
+
+        const REDACTED = '\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588';
+
+        trivia.forEach((item, i) => {
+          const li = document.createElement('li');
+          const span = document.createElement('span');
+          span.className = 'ingredient locked';
+          span.textContent = REDACTED;
+          span.id = 'ingredient-' + i;
+          li.appendChild(span);
+          list.appendChild(li);
+        });
+
+        const showQuestion = () => {
+          const q = trivia[current];
+          progressEl.textContent = `Question ${current + 1} of ${trivia.length}`;
+          questionEl.textContent = q.question;
+          feedbackEl.textContent = '';
+          choicesEl.innerHTML = '';
+
+          const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+          shuffled.forEach((choice) => {
+            const btn = document.createElement('button');
+            btn.className = 'trivia-choice';
+            btn.textContent = choice;
+            btn.addEventListener('click', () => handleAnswer(choice, btn));
+            choicesEl.appendChild(btn);
+          });
+        };
+
+        const handleAnswer = (choice, btn) => {
+          const q = trivia[current];
+          const allBtns = choicesEl.querySelectorAll('.trivia-choice');
+
+          allBtns.forEach((b) => b.disabled = true);
+
+          if (choice === q.answer) {
+            btn.classList.add('correct');
+            feedbackEl.textContent = 'Correct! 🎉';
+
+            const span = document.getElementById('ingredient-' + current);
+            setTimeout(() => {
+              span.textContent = q.ingredient;
+              span.className = 'ingredient revealed';
+              current++;
+              if (current < trivia.length) {
+                setTimeout(showQuestion, 800);
+              } else {
+                triviaArea.hidden = true;
+                completeEl.hidden = false;
+              }
+            }, 600);
+          } else {
+            btn.classList.add('wrong');
+            feedbackEl.textContent = 'Not quite — try again!';
+            setTimeout(() => {
+              btn.classList.remove('wrong');
+              btn.disabled = false;
+              allBtns.forEach((b) => b.disabled = false);
+              feedbackEl.textContent = '';
+            }, 700);
+          }
+        };
+
+        showQuestion();
+      })();
+
+      (function () {
+        const backdrop = document.getElementById('meme-backdrop');
+        const modalTitle = document.getElementById('meme-modal-title');
+        const memeImg = document.getElementById('meme-img');
+        const topOverlay = document.getElementById('meme-top-overlay');
+        const bottomOverlay = document.getElementById('meme-bottom-overlay');
+        const topInput = document.getElementById('meme-top-input');
+        const bottomInput = document.getElementById('meme-bottom-input');
+
+        let activeTransform = null;
+
+        const mockingCase = (text) =>
+          text.split('').map((ch, i) => i % 2 === 0 ? ch.toLowerCase() : ch.toUpperCase()).join('');
+
+        const applyTransform = (text) =>
+          activeTransform === 'mocking' ? mockingCase(text) : text;
+
+        const openModal = (img, label, transform) => {
+          memeImg.src = img;
+          modalTitle.textContent = label;
+          activeTransform = transform || null;
+          topInput.value = '';
+          bottomInput.value = '';
+          topOverlay.textContent = '';
+          bottomOverlay.textContent = '';
+          backdrop.classList.add('open');
+          topInput.focus();
+        };
+
+        const closeModal = () => backdrop.classList.remove('open');
+
+        document.querySelectorAll('.meme-card').forEach((card) => {
+          card.addEventListener('click', () =>
+            openModal(card.dataset.img, card.dataset.label, card.dataset.transform)
+          );
+        });
+
+        document.getElementById('meme-close').addEventListener('click', closeModal);
+
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeModal();
+        });
+
+        topInput.addEventListener('input', () => {
+          topOverlay.textContent = applyTransform(topInput.value);
+        });
+
+        bottomInput.addEventListener('input', () => {
+          bottomOverlay.textContent = applyTransform(bottomInput.value);
+        });
+
+        const drawMemeText = (ctx, text, x, y, maxWidth, fontSize, position) => {
+          const words = text.toUpperCase().split(' ');
+          const lineHeight = fontSize * 1.15;
+          const lines = [];
+          let current = '';
+
+          for (const word of words) {
+            const test = current ? current + ' ' + word : word;
+            if (ctx.measureText(test).width > maxWidth && current) {
+              lines.push(current);
+              current = word;
+            } else {
+              current = test;
+            }
+          }
+          if (current) lines.push(current);
+
+          if (position === 'bottom') lines.reverse();
+
+          lines.forEach((line, i) => {
+            const lineY = position === 'top'
+              ? y + i * lineHeight
+              : y - i * lineHeight;
+            ctx.strokeText(line, x, lineY);
+            ctx.fillText(line, x, lineY);
+          });
+        };
+
+        document.getElementById('meme-download').addEventListener('click', () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const img = new Image();
+
+          img.onload = () => {
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            ctx.drawImage(img, 0, 0);
+
+            const fontSize = Math.max(24, Math.floor(canvas.height / 8));
+            ctx.font = `900 ${fontSize}px Impact, "Arial Narrow", sans-serif`;
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = fontSize / 6;
+            ctx.lineJoin = 'round';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+
+            const x = canvas.width / 2;
+            const padding = Math.floor(fontSize * 0.25);
+            const maxWidth = canvas.width - padding * 4;
+
+            if (topInput.value.trim()) {
+              drawMemeText(ctx, applyTransform(topInput.value.trim()), x, padding, maxWidth, fontSize, 'top');
+            }
+
+            if (bottomInput.value.trim()) {
+              ctx.textBaseline = 'bottom';
+              drawMemeText(ctx, applyTransform(bottomInput.value.trim()), x, canvas.height - padding, maxWidth, fontSize, 'bottom');
+            }
+
+            const link = document.createElement('a');
+            link.download = 'meme.jpg';
+            link.href = canvas.toDataURL('image/jpeg', 0.92);
+            link.click();
+          };
+
+          img.src = memeImg.src;
+        });
+      })();
+    </script>
+  </body>
+</html>
