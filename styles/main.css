@@ -69,17 +69,17 @@ figcaption {
 .fesh-gallery .controls {
   display: flex;
   justify-content: space-between;
+  position: absolute;
+  top: 50%;
+  left: 0;
   width: 100%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 .fesh-gallery .controls button {
   background-color: transparent;
   border: 0;
   font-size: 3em;
   padding: 0;
-}
-.fesh-gallery .controls button.prev {
-  left: 0;
-}
-.fesh-gallery .controls button.next {
-  right: 0;
+  pointer-events: all;
 }
