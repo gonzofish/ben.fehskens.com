@@ -83,3 +83,8 @@ figcaption {
   padding: 0;
   pointer-events: all;
 }
+.fesh-gallery .controls button img {
+  height: 1em;
+  width: auto;
+  display: block;
+}

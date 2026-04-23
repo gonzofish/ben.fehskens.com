@@ -15,7 +15,17 @@
 
   const getActiveImage = (container) => container.querySelector('a.active');
 
-  const gallery = (selector, files) => {
+  const createControlContent = (content) => {
+    if (content && typeof content === 'object' && content.src) {
+      const img = document.createElement('img');
+      img.setAttribute('src', content.src);
+      img.setAttribute('alt', content.alt || '');
+      return img;
+    }
+    return document.createTextNode(content);
+  };
+
+  const gallery = (selector, files, options = {}) => {
     const target = document.querySelector(selector);
     const [firstFile, ...otherFiles] = files;
     const firstImage = createImage(firstFile);
@@ -23,6 +33,9 @@
     const controlsContainer = document.createElement('div');
     const nextControl = document.createElement('button');
     const prevControl = document.createElement('button');
+
+    const prevContent = options.prev !== undefined ? options.prev : '⬅️';
+    const nextContent = options.next !== undefined ? options.next : '➡️';
 
     target.classList.add('fesh-gallery');
     controlsContainer.classList.add('controls');
@@ -37,7 +50,7 @@
     target.appendChild(imageContainer);
 
     prevControl.classList.add('prev');
-    prevControl.appendChild(document.createTextNode('⬅️'));
+    prevControl.appendChild(createControlContent(prevContent));
     prevControl.addEventListener('click', () => {
       const currentActive = getActiveImage(target);
       const nextActive = imageContainer.firstChild === currentActive ? imageContainer.lastChild : currentActive.previousSibling;
@@ -48,7 +61,7 @@
     controlsContainer.appendChild(prevControl);
 
     nextControl.classList.add('next');
-    nextControl.appendChild(document.createTextNode('➡️'));
+    nextControl.appendChild(createControlContent(nextContent));
     nextControl.addEventListener('click', () => {
       const currentActive = getActiveImage(target);
       const nextActive = imageContainer.lastChild === currentActive ? imageContainer.firstChild : currentActive.nextSibling;
