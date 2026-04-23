@@ -206,6 +206,22 @@
         border-color: #023e8a;
       }
 
+      #meme-download {
+        padding: 0.55em 1em;
+        background: #023e8a;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 1em;
+        font-family: 'Fredoka One', cursive;
+        letter-spacing: 0.03em;
+        width: 100%;
+      }
+
+      #meme-download:hover {
+        background: #0353a4;
+      }
+
       .episode-embed {
         margin-top: 0.6em;
         position: relative;
@@ -338,7 +354,7 @@
       <article>
         <h2>Memes &amp; Reactions</h2>
         <div class="memes">
-          <div class="meme-card" data-img="./images/SB/mocking_spongebob.jpg" data-label="mOcKiNg SpOnGeBoB">
+          <div class="meme-card" data-img="./images/SB/mocking_spongebob.jpg" data-label="mOcKiNg SpOnGeBoB" data-transform="mocking">
             <div class="meme-text">mOcKiNg SpOnGeBoB</div>
             <div class="meme-caption">When someone says something dumb and you repeat it back at them — alternating caps included.</div>
             <div class="meme-hint">Click to make a meme</div>
@@ -374,6 +390,7 @@
         <div class="meme-inputs">
           <input type="text" id="meme-top-input" placeholder="Top text">
           <input type="text" id="meme-bottom-input" placeholder="Bottom text">
+          <button id="meme-download">Download meme</button>
         </div>
       </div>
     </div>
@@ -396,9 +413,18 @@
         const topInput = document.getElementById('meme-top-input');
         const bottomInput = document.getElementById('meme-bottom-input');
 
-        const openModal = (img, label) => {
+        let activeTransform = null;
+
+        const mockingCase = (text) =>
+          text.split('').map((ch, i) => i % 2 === 0 ? ch.toLowerCase() : ch.toUpperCase()).join('');
+
+        const applyTransform = (text) =>
+          activeTransform === 'mocking' ? mockingCase(text) : text;
+
+        const openModal = (img, label, transform) => {
           memeImg.src = img;
           modalTitle.textContent = label;
+          activeTransform = transform || null;
           topInput.value = '';
           bottomInput.value = '';
           topOverlay.textContent = '';
@@ -410,7 +436,9 @@
         const closeModal = () => backdrop.classList.remove('open');
 
         document.querySelectorAll('.meme-card').forEach((card) => {
-          card.addEventListener('click', () => openModal(card.dataset.img, card.dataset.label));
+          card.addEventListener('click', () =>
+            openModal(card.dataset.img, card.dataset.label, card.dataset.transform)
+          );
         });
 
         document.getElementById('meme-close').addEventListener('click', closeModal);
@@ -424,11 +452,80 @@
         });
 
         topInput.addEventListener('input', () => {
-          topOverlay.textContent = topInput.value;
+          topOverlay.textContent = applyTransform(topInput.value);
         });
 
         bottomInput.addEventListener('input', () => {
-          bottomOverlay.textContent = bottomInput.value;
+          bottomOverlay.textContent = applyTransform(bottomInput.value);
+        });
+
+        const drawMemeText = (ctx, text, x, y, maxWidth, fontSize, position) => {
+          const words = text.toUpperCase().split(' ');
+          const lineHeight = fontSize * 1.15;
+          const lines = [];
+          let current = '';
+
+          for (const word of words) {
+            const test = current ? current + ' ' + word : word;
+            if (ctx.measureText(test).width > maxWidth && current) {
+              lines.push(current);
+              current = word;
+            } else {
+              current = test;
+            }
+          }
+          if (current) lines.push(current);
+
+          if (position === 'bottom') lines.reverse();
+
+          lines.forEach((line, i) => {
+            const lineY = position === 'top'
+              ? y + i * lineHeight
+              : y - i * lineHeight;
+            ctx.strokeText(line, x, lineY);
+            ctx.fillText(line, x, lineY);
+          });
+        };
+
+        document.getElementById('meme-download').addEventListener('click', () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const img = new Image();
+
+          img.onload = () => {
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            ctx.drawImage(img, 0, 0);
+
+            const fontSize = Math.max(24, Math.floor(canvas.height / 8));
+            ctx.font = `900 ${fontSize}px Impact, "Arial Narrow", sans-serif`;
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = fontSize / 6;
+            ctx.lineJoin = 'round';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+
+            const x = canvas.width / 2;
+            const padding = Math.floor(fontSize * 0.25);
+            const maxWidth = canvas.width - padding * 4;
+
+            if (topInput.value.trim()) {
+              drawMemeText(ctx, applyTransform(topInput.value.trim()), x, padding, maxWidth, fontSize, 'top');
+            }
+
+            if (bottomInput.value.trim()) {
+              ctx.textBaseline = 'bottom';
+              drawMemeText(ctx, applyTransform(bottomInput.value.trim()), x, canvas.height - padding, maxWidth, fontSize, 'bottom');
+            }
+
+            const link = document.createElement('a');
+            link.download = 'meme.jpg';
+            link.href = canvas.toDataURL('image/jpeg', 0.92);
+            link.click();
+          };
+
+          img.src = memeImg.src;
         });
       })();
     </script>
