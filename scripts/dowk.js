@@ -4,39 +4,55 @@
   const CHEESE_BOARD = 1;
   const GREG_BOARD = -1;
 
-  const getOpenSpots = (gregPos, cheeseSpot = -1) => {
+  const getSurroundingSpots = (gregPos) => {
+    const up = gregPos - COLS;
+    const down = gregPos + COLS;
+    const left = gregPos - 1;
+    const right = gregPos + 1;
+
+    return { up, down, left, right };
+  }
+
+  const getOpenSpots = (gregPos) => {
     // greg's position, above, below
     const openSpots = new Set();
-    const aboveGreg = gregPos - COLS;
-    const belowGreg = gregPos + COLS;
-    const leftGreg = gregPos - 1;
-    const rightGreg = gregPos + 1;
+    const spots = getSurroundingSpots(gregPos);
 
     // if we are NOT in the first row, there's a cell above
-    if (aboveGreg > 0 && cheeseSpot !== aboveGreg) {
-      openSpots.add(aboveGreg);
+    if (spots.up >= 0) {
+      openSpots.add(spots.up);
     }
 
-    if (belowGreg < COLS * ROWS && cheeseSpot !== belowGreg) {
-      openSpots.add(belowGreg);
+    if (spots.down < COLS * ROWS) {
+      openSpots.add(spots.down);
     }
 
     // If we're in the first cell of a row, there is no left position
-    if (gregPos % COLS !== 0 && leftGreg !== cheeseSpot) {
-      openSpots.add(leftGreg);
+    if (gregPos % COLS !== 0) {
+      openSpots.add(spots.left);
     }
 
     // If we're in the last cell of a row, there is no right position
-    if (gregPos % COLS !== COLS - 1 && rightGreg !== cheeseSpot) {
-      openSpots.add(rightGreg);
+    if (gregPos % COLS !== COLS - 1) {
+      openSpots.add(spots.right);
     }
 
     return openSpots;
   };
 
+  const getDirectionText = (gregPos, cellNum) => {
+    const spots = getSurroundingSpots(gregPos);
+    const directionTexts = { up: '⬆️', down: '⬇️', left: '⬅️', right: '➡️'};
+    const match = Object.entries(spots).find(([__direction, position]) => position === cellNum);
+    const direction = match?.[0];
+
+    return directionTexts[direction] ?? '';
+
+  };
+
   const createBoard = (gregPos, cheesePos, setGregPos) => {
     const gameTable = document.createElement('table');
-    const openSpots = getOpenSpots(gregPos, cheesePos);
+    const openSpots = getOpenSpots(gregPos);
 
     for (let i = 0; i < ROWS; i++) {
       const row = document.createElement('tr');
@@ -45,9 +61,19 @@
       for (let j = 0; j < COLS; j++) {
         const cell = document.createElement('td');
         const cellNum = rowStart + j;
+        const isGreg = cellNum === gregPos;
+        const isOpenSpot = openSpots.has(cellNum);
         let img;
 
-        if (cellNum === gregPos) {
+        cell.setAttribute('data-cell-num', `${cellNum}`);
+
+        if (isOpenSpot || isGreg) {
+          cell.classList.add('open-spot');
+          cell.setAttribute('role', 'button');
+          cell.addEventListener('click', setGregPos);
+        }
+
+        if (isGreg) {
           img = 'greg';
         } else if (cellNum === cheesePos) {
           img = 'cheese';
@@ -56,15 +82,12 @@
         if (img) {
           const playerImage = document.createElement('img');
           playerImage.src = `./images/DOWK/game/${img}.png`;
+          playerImage.setAttribute('data-cell-num', `${cellNum}`);
           cell.appendChild(playerImage);
-        } else if (openSpots.has(cellNum)) {
-          cell.classList.add('open-spot');
-          cell.setAttribute('data-cell-num', `${cellNum}`);
+          cell.setAttribute('role', 'button');
           cell.addEventListener('click', setGregPos);
-        }
-
-        if (!img) {
-          cell.appendChild(document.createTextNode(cellNum));
+        } else if (isOpenSpot) {
+          cell.appendChild(document.createTextNode(getDirectionText(gregPos, cellNum)));
         }
 
         row.appendChild(cell);
@@ -76,7 +99,29 @@
     return gameTable;
   };
 
-  const getRandomSpot = () => Math.floor(Math.random() * (COLS * ROWS));
+  const createCheeseTouch = (restartGame) => {
+    const div = document.createElement('div');
+    const img = document.createElement('img');
+    const p = document.createElement('p');
+    const button = document.createElement('button');
+
+    div.classList.add('cheese-touch');
+
+    p.appendChild(document.createTextNode('You lost! You got the cheese touch!'));
+    div.appendChild(p);
+
+    button.addEventListener('click', restartGame);
+    button.appendChild(document.createTextNode('Play again'));
+    div.appendChild(button);
+
+    img.src = './images/DOWK/game/cheese-touch.jpg';
+    div.appendChild(img);
+
+    return div;
+  }
+
+  const getRandomInt = (max) => Math.floor(Math.random() * max);
+  const getRandomSpot = () => getRandomInt(COLS * ROWS);
 
   const getCheeseStartSpot = (gregPos) => {
     // greg's position, above, below
@@ -94,31 +139,6 @@
     return cheeseStart;
   };
 
-  /*
-    |  0 |  1 |  2 |  3 |  4 |
-    |  5 |  6 |  7 |  C |  9 |
-    | 10 |  G | 12 | 13 | 14 |
-    | 15 | 16 | 17 | 18 | 19 |
-    | 20 | 21 | 22 | 23 | 24 |
-
-    G = 11
-    C = 8
-    s(G) = 6, 10, 12, 16
-    s(C) = 3, 7, 9, 13
-
-    - figure out greg's best move
-    - figure out next move vs greg's best move
-
-    row_start = i * COLS
-    cell_num = row_start + j
-
-    i = floor(cell_num / COLS)
-    j = cell_num - (i * COLS)
-
-    ng = 6, c = 8
-      row = floor(ng / 5)
-      col = ng - row
-  */
   const getCoords = (position) => {
     const i = Math.floor(position / COLS);
     const j = position - (i * COLS);
@@ -137,39 +157,18 @@
     return openCoords;
   }
 
+  const getRandomNextCheesePos = (cheesePos) => {
+    const cheeseSpots = Array.from(getOpenSpots(cheesePos));
+    const index = getRandomInt(cheeseSpots.length);
+
+    return cheeseSpots[index];
+  };
+
   const getNextCheesePos = (cheesePos, gregPos) => {
     const cheeseSpots = getOpenCoords(cheesePos, gregPos);
     const gregSpots = getOpenCoords(gregPos, cheesePos);
     const scores = Array(cheeseSpots.length).fill(0);
-    // G -> 11 -> [2, 1]
-    //  [6, 10, 12, 16] -> [[1, 1], [2, 0], [2, 2], [3, 1]]
-    // C -> 8 -> [1, 3] ->
-    //  [3,  7,  9, 13] -> [[0, 3], [1, 2], [1, 4], [2, 3]]
-    // [1, 1]
-    //    [0, 3] = [-1, +2] = 3
-    //    [1, 2] = [ 0, +1] = 1
-    //    [1, 4] = [ 0, +3] = 3
-    //    [2, 3] = [+1, +2] = 3
-    // [2, 0]
-    //    [0, 3] = [-2, +3] = 5 *
-    //    [1, 2] = [-1, +2] = 3
-    //    [1, 4] = [-1, +4] = 5 *
-    //    [2, 3] = [ 0, +3] = 3
-    // [2, 2]
-    //    [0, 3] = [-2, +1] = 3
-    //    [1, 2] = [-1,  0] = 1
-    //    [1, 4] = [-1, +2] = 3
-    //    [2, 3] = [ 0, +1] = 1
-    // [3, 1]
-    //    [0, 3] = [-3, +2] = 5 *
-    //    [1, 2] = [-2, +1] = 3
-    //    [1, 4] = [-2, +3] = 5 *
-    //    [2, 3] = [-1, +2] = 3
 
-    // [0, 3] = 3 + 5 + 3 + 5 = 16
-    // [1, 2] = 1 + 3 + 1 + 3 = 8
-    // [1, 4] = 3 + 5 + 3 + 5 = 16
-    // [2, 3] = 3 + 3 + 1 + 3 = 10
     for (const gregCoords of gregSpots) {
       for (let i = 0; i < cheeseSpots.length; i++) {
         const cheeseCoords = cheeseSpots[i];
@@ -180,15 +179,20 @@
       }
     }
 
-    let maxIndex = 0;
+    let minValue = Infinity;
+    let indexes = [];
 
     for (let i = 1; i < scores.length; i++) {
-      if (scores[i] > scores[maxIndex]) {
-        maxIndex = i;
+      if (scores[i] < minValue) {
+        minValue = scores[i];
+        indexes = [i];
+      } else if (scores[i] === minValue) {
+        indexes.push(i);
       }
     }
 
-    const nextCheese = cheeseSpots[maxIndex];
+    const minIndex = indexes.length > 1 ? getRandomInt(indexes.length) : 0;
+    const nextCheese = cheeseSpots[indexes[minIndex]];
 
     const rowStart = nextCheese[0] * COLS;
 
@@ -198,22 +202,59 @@
   const runGame = (selector) => {
     const gameContainer = document.querySelector(selector);
     const board = new Array(ROWS * COLS).fill(0);
-    let gregPos = getRandomSpot();
-    let cheesePos = getCheeseStartSpot(gregPos);
+    let chasing = 0;
+    let gregPos;
+    let cheesePos;
 
-    board[gregPos] = GREG_BOARD;
-    board[cheesePos] = CHEESE_BOARD;
+    const setGameContainerContents = (contents) => {
+      gameContainer.innerHTML = '';
+      gameContainer.appendChild(contents);
+    }
 
-    /*
-      - Move up/down/left/right (NO DIAGONAL)
-      - Only move 1 spot
-    */
+    const restartGame = () => {
+      gregPos = getRandomSpot();
+      cheesePos = getCheeseStartSpot(gregPos);
+
+      board[gregPos] = GREG_BOARD;
+      board[cheesePos] = CHEESE_BOARD;
+
+      drawBoard();
+    };
+
+    const checkAreOneApart = () => {
+      const [cheeseX, cheeseY] = getCoords(cheesePos);
+      const [gregX, gregY] = getCoords(gregPos);
+
+      if (cheeseX === gregX || cheeseX - 1 === gregX || cheeseY + 1 === gregX) {
+        return cheeseY === gregY - 1 ||
+          cheeseY === gregY + 1;
+      }
+
+      if (cheeseY === gregY || cheeseY - 1 === gregY || cheeseY + 1 === gregY) {
+        return cheeseX === gregX - 1 ||
+          cheeseX === gregX + 1;
+      }
+
+      return false;
+    };
 
     const updatePositions = (nextGregPos) => {
       const lastGregPos = gregPos;
       const lastCheesePos = cheesePos;
 
-      cheesePos = getNextCheesePos(cheesePos, gregPos);
+      if (checkAreOneApart()) {
+        chasing += 1;
+      } else {
+        chasing = 0;
+      }
+
+      if (chasing >= 3) {
+        cheesePos = getRandomNextCheesePos(cheesePos);
+        chasing = 0;
+      } else {
+        cheesePos = getNextCheesePos(cheesePos, gregPos);
+      }
+
       gregPos = nextGregPos;
 
       board[lastGregPos] = 0;
@@ -225,17 +266,21 @@
       const cellNum = event.target.getAttribute('data-cell-num');
 
       updatePositions(Number(cellNum));
-      drawBoard();
+
+      if (cheesePos === gregPos) {
+        setGameContainerContents(createCheeseTouch(restartGame));
+      } else {
+        drawBoard();
+      }
+
     };
     const drawBoard = () => {
-      gameContainer.innerHTML = '';
-
       const board = createBoard(gregPos, cheesePos, setGregPos);
 
-      gameContainer.appendChild(board);
+      setGameContainerContents(board);
     };
 
-    drawBoard();
+    restartGame();
   };
 
   window.dowk = {

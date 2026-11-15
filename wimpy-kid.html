@@ -22,7 +22,7 @@
         background-size: 100% 2em;
       }
 
-      a {
+      a, #game button {
         background-color: #0d28c7;
         color: #ffffff;
         font-family: "Cutive Mono", monospace;
@@ -69,6 +69,14 @@
         background-color: transparent;
       }
 
+      #game button {
+        border: 0;
+        border-radius: 0.25em;
+      }
+
+      #game img {
+        width: 100%;
+      }
       #game table {
         border: 1px solid #ea3424;
         border-collapse: collapse;
@@ -80,11 +88,18 @@
         width: 50px;
       }
       #game table td.open-spot {
-        background-color: rgba(47, 169, 57, 0.5);
+        font-size: 1.25em;
         cursor: pointer;
+        text-align: center;
       }
-      #game table td img {
-        max-width: 100%;
+      #game div.cheese-touch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #game div.cheese-touch img {
+        margin-top: 1em;
+        max-width: 50%;
       }
     </style>
   </head>
@@ -126,6 +141,7 @@
 
       <article id="game">
         <h2>Game</h2>
+        <div></div>
       </article>
     </main>
 
@@ -156,7 +172,7 @@
         './images/DOWK/gallery/jeff-greg.jpg',
       ]);
 
-      dowk.runGame('#game');
+      dowk.runGame('#game > div');
     </script>
   </body>
 </html>
