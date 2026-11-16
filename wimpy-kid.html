@@ -1,0 +1,185 @@
+<html>
+  <head>
+    <title>Diary of a Wimpy Kid - Website of Ben</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+
+    <style>
+      body {
+        background: linear-gradient(270deg, #ea3424, #79150d);
+        font-family: "Patrick Hand", cursive;
+        font-size: 18px;
+      }
+
+      article {
+        background: linear-gradient(#e5e5e5 1px,transparent 0);
+        background-color: #ffffff;
+        background-size: 100% 2em;
+      }
+
+      a, #game button {
+        background-color: #0d28c7;
+        color: #ffffff;
+        font-family: "Cutive Mono", monospace;
+        font-weight: 700;
+        padding: 0.25em 0.5em;
+        text-decoration: none;
+      }
+      a.back-link:hover {
+        text-decoration: underline;
+      }
+
+      a.back-link {
+        border-radius: 0.25em;
+      }
+
+      h1, h2 {
+        font-family: "Patrick Hand", cursive;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 3em;
+        margin-block-start: 0;
+      }
+
+      h2 {
+        font-size: 2em;
+        margin-block-start: 0.4em;
+      }
+
+      main > nav {
+        background-color: #0d28c7;
+        display: flex;
+        margin-bottom: 1em;
+        padding: 0.25em 0.5em;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
+      main > nav > a:hover {
+        text-decoration: underline;
+      }
+
+      #dowk-books a, #dowk-gallery a {
+        background-color: transparent;
+      }
+
+      #game button {
+        border: 0;
+        border-radius: 0.25em;
+      }
+
+      #game img {
+        width: 100%;
+      }
+      #game table {
+        border: 1px solid #ea3424;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      #game table td {
+        border: 1px solid #ea3424;
+        height: 100px;
+        width: 50px;
+      }
+      #game table td.open-spot {
+        font-size: 1.25em;
+        cursor: pointer;
+        text-align: center;
+      }
+      #game div.cheese-touch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #game div.cheese-touch img {
+        margin-top: 1em;
+        max-width: 50%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <article>
+        <h1>Diary of a Wimpy Kid</h1>
+        <p>This webpage is a journal...not a diary.</p>
+        <a class="back-link" href="./">← Back to Webpage of Ben</a>
+      </article>
+
+      <nav>
+        <a href="#books">Books</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#movie-intro">Movie Intro</a>
+        <a href="#game">Game</a>
+      </nav>
+
+      <article id="books">
+        <h2>Books I've Read (or Own)</h2>
+
+        <div id="dowk-books"></div>
+
+        <p class="attribution">
+          Images: © Jeff Kinney
+        </p>
+      </article>
+
+      <article id="gallery">
+        <h2>Gallery</h2>
+
+        <div id="dowk-gallery"></div>
+      </article>
+
+      <article id="movie-intro">
+        <h2>Movie Intro</h2>
+
+        <video controls title="Leo Rides">
+          <source src="./video/wimpy-kid.mp4" type="video/mp4" />
+        </video>
+      </article>
+
+      <article id="game">
+        <h2>Game</h2>
+        <div></div>
+      </article>
+    </main>
+
+    <script src="scripts/fesh.js"></script>
+    <script src="scripts/dowk.js"></script>
+    <script>
+      fesh.gallery('#dowk-books', [
+        './images/DOWK/books/01.png',
+        './images/DOWK/books/02.png',
+        './images/DOWK/books/04.png',
+        './images/DOWK/books/05.png',
+        './images/DOWK/books/07.png',
+        './images/DOWK/books/10.png',
+        './images/DOWK/books/14.png',
+        './images/DOWK/books/15.png',
+        './images/DOWK/books/17.png',
+        './images/DOWK/books/18.png',
+        './images/DOWK/books/movie-diary.png',
+        './images/DOWK/books/friendly-01.png',
+        './images/DOWK/books/friendly-02.png',
+        './images/DOWK/books/do-it-yourself.png',
+        './images/DOWK/books/blank-diary.png',
+      ]);
+
+      fesh.gallery('#dowk-gallery', [
+        './images/DOWK/gallery/greg.png',
+        './images/DOWK/gallery/macys-parade.jpg',
+        './images/DOWK/gallery/jeff-greg.jpg',
+      ]);
+
+      dowk.runGame('#game > div');
+    </script>
+  </body>
+</html>
